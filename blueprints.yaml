@@ -1,0 +1,55 @@
+name: Database Link
+version: 0.1.0
+description: Adds Form processing action "database"
+icon: plug
+author:
+  name: Elia Zanaboni
+  email: elia.zanaboni@gmail.com
+homepage: https://github.com/elia-zanaboni/grav-plugin-database-link
+demo: http://demo.yoursite.com
+keywords: grav, plugin, mysql, database, query
+bugs: https://github.com/elia-zanaboni/grav-plugin-database-link/issues
+readme: https://github.com/elia-zanaboni/grav-plugin-database-link/blob/develop/README.md
+license: MIT
+
+form:
+  validation: strict
+  fields:
+    enabled:
+      type: toggle
+      label: Plugin status
+      highlight: 1
+      default: 0
+      options:
+        1: Enabled
+        0: Disabled
+      validate:
+        type: bool
+    text_driver:
+      type: select
+      label: Database Driver
+      default: mysql
+      options:
+        mysql: MySQL
+      validate:
+        required: true
+    text_dbhost:
+      type: text
+      label: Database Host
+      default: 127.0.0.1
+      validate:
+        required: true
+    text_dbuser:
+      type: text
+      label: Database Username
+      default: root
+      validate:
+        required: true
+    password_dbpassword:
+      type: password
+      label: Database Password
+    text_dbname:
+      type: text
+      label: Database Name
+      validate:
+        required: true

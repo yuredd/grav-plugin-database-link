@@ -1,0 +1,6 @@
+enabled: true
+text_driver: mysql
+text_dbhost: 127.0.0.1
+text_dbuser: root
+password_dbpassword:
+text_dbname:
