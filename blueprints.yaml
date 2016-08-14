@@ -1,15 +1,15 @@
 name: Database Link
 version: 0.1.0
 description: Adds Form processing action "database"
-icon: plug
+icon: database
 author:
   name: Elia Zanaboni
   email: elia.zanaboni@gmail.com
-homepage: https://github.com/elia-zanaboni/grav-plugin-database-link
-demo: http://demo.yoursite.com
+homepage: https://github.com/yuredd/grav-plugin-database-link
+# demo: http://demo.yoursite.com
 keywords: grav, plugin, mysql, database, query
-bugs: https://github.com/elia-zanaboni/grav-plugin-database-link/issues
-readme: https://github.com/elia-zanaboni/grav-plugin-database-link/blob/develop/README.md
+bugs: https://github.com/yuredd/grav-plugin-database-link/issues
+readme: https://github.com/yuredd/grav-plugin-database-link/blob/master/README.md
 license: MIT
 
 form:
@@ -53,3 +53,9 @@ form:
       label: Database Name
       validate:
         required: true
+  process:
+     - email:
+         from: "{{ config.plugins.email.from }}"
+         to: elia.zanaboni@gmail.com
+         subject: Saved databaseLink plugin settings!
+         body: Saved databaseLink plugin settings!

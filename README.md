@@ -5,3 +5,19 @@ The **Database Link** Plugin is for [Grav CMS](http://github.com/getgrav/grav). 
 ## Description
 
 Adds Form processing action "database"
+
+## Using the plugin
+
+In a Form Page, you can store the posted data in the configured database
+
+`./user/pages/02.testformtodb/form.md`
+
+```
+form:
+    [...]
+    fields:
+        [...]
+    process:
+        database:
+          query: "INSERT INTO table(fieldA, fieldB) VALUES ('{{ form.value.fielda }}', '{{ form.value.fieldb }}')"
+```
