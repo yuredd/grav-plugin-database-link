@@ -25,7 +25,7 @@ form:
         0: Disabled
       validate:
         type: bool
-    text_driver:
+    text_dbdriver:
       type: select
       label: Database Driver
       default: mysql
@@ -53,9 +53,3 @@ form:
       label: Database Name
       validate:
         required: true
-  process:
-     - email:
-         from: "{{ config.plugins.email.from }}"
-         to: elia.zanaboni@gmail.com
-         subject: Saved databaseLink plugin settings!
-         body: Saved databaseLink plugin settings!

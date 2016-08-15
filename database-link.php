@@ -1,8 +1,10 @@
 <?php
 namespace Grav\Plugin;
 
+use \PDO;
 use Grav\Common\Plugin;
 use RocketTheme\Toolbox\Event\Event;
+use RocketTheme\Toolbox\Session\Message;
 
 /**
  * Class DatabaseLinkPlugin
@@ -10,6 +12,9 @@ use RocketTheme\Toolbox\Event\Event;
  */
 class DatabaseLinkPlugin extends Plugin
 {
+
+    private static $connection = FALSE;
+
     /**
      * @return array
      *
@@ -23,7 +28,8 @@ class DatabaseLinkPlugin extends Plugin
     public static function getSubscribedEvents()
     {
         return [
-            'onPluginsInitialized' => ['onPluginsInitialized', 0]
+            'onPluginsInitialized' => ['onPluginsInitialized', 0],
+            'onFormProcessed' => ['onFormProcessed', 0]
         ];
     }
 
@@ -32,15 +38,28 @@ class DatabaseLinkPlugin extends Plugin
      */
     public function onPluginsInitialized()
     {
-        // Don't proceed if we are in the admin plugin
-        if ($this->isAdmin()) {
-            return;
+
+        // Don't initialize the DB if we are in the Admin plugin
+        //if ($this->isAdmin()) {
+        //    return;
+        //}
+
+        // TODO - Initialize the DB
+        $dbdriver = $this->grav['config']->get('plugins.database-link.text_dbdriver');
+        $dbhost = $this->grav['config']->get('plugins.database-link.text_dbhost');
+        $dbname = $this->grav['config']->get('plugins.database-link.text_dbname');
+        $dbuser = $this->grav['config']->get('plugins.database-link.text_dbuser');
+        $dbpassword = $this->grav['config']->get('plugins.database-link.password_dbpassword');
+
+        try {
+           $this->connection = new PDO("$dbdriver:host=$dbhost;dbname=$dbname;charset=utf8mb4", $dbuser, $dbpassword);
+           $this->connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+           $this->connection->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
+        } catch(\PDOException $error) {
+           $messages = $this->grav['messages'];
+           $messages->add('Database Link Error: '.$error->getMessage(), 'error');
         }
 
-        // Enable the main event we are interested in
-        $this->enable([
-            'onFormProcessed' => ['onFormProcessed', 0]
-        ]);
     }
 
     public function onFormProcessed(Event $event)
@@ -49,10 +68,20 @@ class DatabaseLinkPlugin extends Plugin
        $action = $event['action'];
        $params = $event['params'];
 
+       // TODO - if we are in a normal page, catch the 'database' action and execute the 'query' field query
        switch ($action) {
            case 'database':
                // parameter 'query' contains the insert/update/delete
+               $query = $params['query'];
+               try {
+                   $count = $this->connection->exec($query);
+                   dump("$count rows affected");
+               } catch(PDOException $error) {
+                   $messages = $this->grav['messages'];
+                   $messages->add('Database Link Error: '.$error->getMessage(), 'error');
+               }
        }
+
     }
 
     /**
@@ -61,6 +90,7 @@ class DatabaseLinkPlugin extends Plugin
      *
      * @param Event $e
      */
+/*
     public function onPageContentRaw(Event $e)
     {
         // Get a variable from the plugin configuration
@@ -72,4 +102,5 @@ class DatabaseLinkPlugin extends Plugin
         // Prepend the output with the custom text and set back on the page
         $e['page']->setRawContent($text . "\n\n" . $content);
     }
+*/
 }
