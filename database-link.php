@@ -73,13 +73,26 @@ class DatabaseLinkPlugin extends Plugin
            case 'database':
                // parameter 'query' contains the insert/update/delete
                $query = $params['query'];
+
+               $values = $params['values'];
+               // the form contains the bindable values
+               dump($form->value('date', true));
+
                try {
                    $count = $this->connection->exec($query);
-                   dump("$count rows affected");
-               } catch(PDOException $error) {
+               } catch(\PDOException $error) {
                    $messages = $this->grav['messages'];
                    $messages->add('Database Link Error: '.$error->getMessage(), 'error');
+                   $event->stopPropagation();
+                   $this->grav->fireEvent('onFormValidationError', new Event([
+                        'form'    => $form,
+                        //'message' => $this->grav['language']->translate('PLUGIN_FORM.ERROR_VALIDATING_CAPTCHA')
+                        'message' => 'Sorry, there was an error saving your entered data. Please try again later. ' . $error->getMessage()
+                   ]));
+
+                   return;
                }
+               break;
        }
 
     }
