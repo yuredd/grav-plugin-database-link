@@ -19,5 +19,8 @@ form:
         [...]
     process:
         database:
-          query: "INSERT INTO table(fieldA, fieldB) VALUES ('{{ form.value.fielda }}', '{{ form.value.fieldb }}')"
+          query: "INSERT INTO table(fieldA, fieldB) VALUES (?, ?)"
+          values:
+              - fieldA
+              - fieldB
 ```

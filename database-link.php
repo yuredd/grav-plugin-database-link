@@ -79,7 +79,16 @@ class DatabaseLinkPlugin extends Plugin
                dump($form->value('date', true));
 
                try {
-                   $count = $this->connection->exec($query);
+                   if($values) {
+                        $values_arr = [];
+                        $statement = $this->connection->prepare($query);
+                        foreach($values as $field) {
+                            $values_arr[] = $form->value($field, true);
+                        }
+                        $statement->execute($values_arr);
+                   } else {
+                        $count = $this->connection->exec($query);
+                   }
                } catch(\PDOException $error) {
                    $messages = $this->grav['messages'];
                    $messages->add('Database Link Error: '.$error->getMessage(), 'error');
